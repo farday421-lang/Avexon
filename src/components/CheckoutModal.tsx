@@ -243,15 +243,24 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
   // Read orders list if available
   useEffect(() => {
     if (isOpen) {
-      try {
-        const stored = localStorage.getItem("avexon_user_orders");
-        if (stored) {
-          const parsed = JSON.parse(stored) as Order[];
-          setAllOrders(parsed);
+      const fetchServerOrders = async () => {
+        try {
+          const response = await fetch("/api/orders");
+          const resJson = await response.json();
+          if (resJson.success && resJson.data) {
+            setAllOrders(resJson.data);
+            localStorage.setItem("avexon_user_orders", JSON.stringify(resJson.data));
+          } else {
+            const stored = localStorage.getItem("avexon_user_orders");
+            if (stored) setAllOrders(JSON.parse(stored));
+          }
+        } catch (err) {
+          console.warn("Failed to fetch server orders, using fallback: ", err);
+          const stored = localStorage.getItem("avexon_user_orders");
+          if (stored) setAllOrders(JSON.parse(stored));
         }
-      } catch (err) {
-        console.error("Failed to read localStorage orders: ", err);
-      }
+      };
+      fetchServerOrders();
     }
   }, [isOpen]);
 
@@ -315,6 +324,12 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
       try {
         localStorage.setItem("avexon_user_orders", JSON.stringify(updatedOrders));
         window.dispatchEvent(new Event("storage"));
+        // Sync order to backend server database
+        fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newOrder)
+        }).catch(err => console.warn("Failed server order sync: ", err));
       } catch (e) {
         console.warn("Storage limits or permissions failed: ", e);
       }
@@ -395,6 +410,12 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
     try {
       localStorage.setItem("avexon_user_orders", JSON.stringify(updatedOrders));
       window.dispatchEvent(new Event("storage"));
+      // Sync order to backend server database
+      fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOrder)
+      }).catch(err => console.warn("Failed server order sync: ", err));
     } catch (e) {
       console.warn("Storage limits or permissions failed: ", e);
     }
@@ -451,19 +472,20 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
     let matchedOrders: Order[] = [];
     if (cleanQueryPhone.length >= 8) {
       matchedOrders = currentOrders.filter(o => {
+        if (o.paymentMethod === 'custom_pkg') return false;
         const cleanCustomerPhone = o.customerPhone?.replace(/\D/g, "") || "";
         return cleanCustomerPhone.endsWith(cleanQueryPhone) || cleanQueryPhone.endsWith(cleanCustomerPhone);
       });
     }
 
     if (matchedOrders.length === 0) {
-      matchedOrders = currentOrders.filter(o => o.customerPhone === query);
+      matchedOrders = currentOrders.filter(o => o.customerPhone === query && o.paymentMethod !== 'custom_pkg');
     }
 
     if (matchedOrders.length > 0) {
       setSearchedOrdersList(matchedOrders);
     } else {
-      const singleMatch = currentOrders.find(o => o.id.toUpperCase() === queryUpper || o.id.toUpperCase() === `AVX-${queryUpper}`);
+      const singleMatch = currentOrders.find(o => (o.id.toUpperCase() === queryUpper || o.id.toUpperCase() === `AVX-${queryUpper}`) && o.paymentMethod !== 'custom_pkg');
       if (singleMatch) {
         setSearchedOrder(singleMatch);
       } else {
@@ -692,6 +714,9 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
   };
 
   const renderBeautifulOrderProgress = (order: Order) => {
+    if (order.paymentMethod === 'custom_pkg') {
+      return renderCustomPackageConfirmation(order);
+    }
     const currentIndex = getStepIndex(order.status);
     const isDone = order.status === 'Done';
     
@@ -1081,22 +1106,24 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
 
             <div className="flex items-center gap-2">
               {/* Toggle Mode without ugly tabs */}
-              <button
-                type="button"
-                onClick={() => {
-                  setErrorText("");
-                  setSearchError("");
-                  setModalMode(modalMode === 'checkout' ? 'tracking' : 'checkout');
-                  if (modalMode === 'checkout') {
-                    setSearchedOrder(null);
-                    setSearchedOrdersList([]);
-                  }
-                  setStep(1);
-                }}
-                className="text-[9px] font-black uppercase text-purple-300 hover:text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 px-3 py-2 rounded-xl transition duration-200 cursor-pointer text-center font-mono"
-              >
-                {modalMode === 'checkout' ? "Track Order" : "Checkout Form"}
-              </button>
+              {checkoutType !== 'custom' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setErrorText("");
+                    setSearchError("");
+                    setModalMode(modalMode === 'checkout' ? 'tracking' : 'checkout');
+                    if (modalMode === 'checkout') {
+                      setSearchedOrder(null);
+                      setSearchedOrdersList([]);
+                    }
+                    setStep(1);
+                  }}
+                  className="text-[9px] font-black uppercase text-purple-300 hover:text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 px-3 py-2 rounded-xl transition duration-200 cursor-pointer text-center font-mono"
+                >
+                  {modalMode === 'checkout' ? "Track Order" : "Checkout Form"}
+                </button>
+              )}
               
               {/* Close Button on the right, custom circle styled */}
               <button
@@ -1305,14 +1332,25 @@ export default function CheckoutModal({ isOpen, onClose, preselectedWebsiteTitle
                                   রসিদ দেখুন
                                 </button>
                                 
-                                <button
-                                  type="button"
-                                  onClick={() => setSearchedOrder(order)}
-                                  className="bg-purple-500/10 hover:bg-purple-600 border border-purple-500/35 text-purple-300 hover:text-white px-3.5 py-1.5 rounded-xl text-[10px] font-extrabold flex items-center gap-1 cursor-pointer transition duration-200"
-                                >
-                                  <span>লাইভ ট্র্যাকিং</span>
-                                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                                </button>
+                                {order.paymentMethod === 'custom_pkg' ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => setSearchedOrder(order)}
+                                    className="bg-emerald-500/10 hover:bg-emerald-600 border border-emerald-500/35 text-emerald-400 hover:text-white px-3.5 py-1.5 rounded-xl text-[10px] font-extrabold flex items-center gap-1 cursor-pointer transition duration-200"
+                                  >
+                                    <span>অর্ডার বিবরণী</span>
+                                    <ExternalLink className="w-3 h-3" />
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setSearchedOrder(order)}
+                                    className="bg-purple-500/10 hover:bg-purple-600 border border-purple-500/35 text-purple-300 hover:text-white px-3.5 py-1.5 rounded-xl text-[10px] font-extrabold flex items-center gap-1 cursor-pointer transition duration-200"
+                                  >
+                                    <span>লাইভ ট্র্যাকিং</span>
+                                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </div>

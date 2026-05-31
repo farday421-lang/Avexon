@@ -3,6 +3,7 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import fs from "fs";
 
 dotenv.config();
 
@@ -272,6 +273,106 @@ ${JSON.stringify(currentState, null, 2)}
       success: false,
       error: userMessage,
     });
+  }
+});
+
+// JSON File DB Database Paths
+const CONTENT_DB_FILE = path.join(process.cwd(), "content_db.json");
+const ORDERS_DB_FILE = path.join(process.cwd(), "orders_db.json");
+
+// API to get content config from sever JSON file
+app.get("/api/content", (req, res) => {
+  try {
+    if (fs.existsSync(CONTENT_DB_FILE)) {
+      const fileData = fs.readFileSync(CONTENT_DB_FILE, "utf-8");
+      res.json({ success: true, data: JSON.parse(fileData) });
+    } else {
+      res.json({ success: true, data: null });
+    }
+  } catch (err: any) {
+    console.error("Error reading content database:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// API to save content config to server JSON file
+app.post("/api/content", (req, res) => {
+  try {
+    const updatedContent = req.body;
+    fs.writeFileSync(CONTENT_DB_FILE, JSON.stringify(updatedContent, null, 2), "utf-8");
+    res.json({ success: true, message: "Content updated successfully on the server!" });
+  } catch (err: any) {
+    console.error("Error writing content database:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// API to get all customer orders
+app.get("/api/orders", (req, res) => {
+  try {
+    if (fs.existsSync(ORDERS_DB_FILE)) {
+      const fileData = fs.readFileSync(ORDERS_DB_FILE, "utf-8");
+      res.json({ success: true, data: JSON.parse(fileData) });
+    } else {
+      res.json({ success: true, data: [] });
+    }
+  } catch (err: any) {
+    console.error("Error reading orders database:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// API to add or update an order in server JSON file
+app.post("/api/orders", (req, res) => {
+  try {
+    const incomingOrder = req.body;
+    let ordersList = [];
+
+    if (fs.existsSync(ORDERS_DB_FILE)) {
+      const fileData = fs.readFileSync(ORDERS_DB_FILE, "utf-8");
+      try {
+        ordersList = JSON.parse(fileData);
+      } catch (err) {
+        ordersList = [];
+      }
+    }
+
+    const existingIndex = ordersList.findIndex((o: any) => o.id === incomingOrder.id);
+    if (existingIndex !== -1) {
+      ordersList[existingIndex] = { ...ordersList[existingIndex], ...incomingOrder };
+    } else {
+      ordersList.push(incomingOrder);
+    }
+
+    fs.writeFileSync(ORDERS_DB_FILE, JSON.stringify(ordersList, null, 2), "utf-8");
+    res.json({ success: true, data: ordersList });
+  } catch (err: any) {
+    console.error("Error writing orders database:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// API to delete an order from server JSON file
+app.delete("/api/orders/:id", (req, res) => {
+  try {
+    const orderId = req.params.id;
+    let ordersList = [];
+
+    if (fs.existsSync(ORDERS_DB_FILE)) {
+      const fileData = fs.readFileSync(ORDERS_DB_FILE, "utf-8");
+      try {
+        ordersList = JSON.parse(fileData);
+      } catch (err) {
+        ordersList = [];
+      }
+    }
+
+    ordersList = ordersList.filter((o: any) => o.id !== orderId);
+    fs.writeFileSync(ORDERS_DB_FILE, JSON.stringify(ordersList, null, 2), "utf-8");
+    res.json({ success: true, data: ordersList });
+  } catch (err: any) {
+    console.error("Error deleting order:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

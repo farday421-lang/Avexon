@@ -425,15 +425,25 @@ export default function AdminPanel({ isOpen, onClose, isStandalonePWA = false }:
       setOwnerTitle(owner.title);
       setOwnerPicUrl(owner.picUrl);
 
-      // Load all incoming orders from tracking localDB
-      try {
-        const stored = localStorage.getItem("avexon_user_orders");
-        if (stored) {
-          setAllOrders(JSON.parse(stored));
+      // Load all incoming orders from tracking localDB/Server
+      const fetchOrders = async () => {
+        try {
+          const res = await fetch("/api/orders");
+          const json = await res.json();
+          if (json.success && json.data) {
+            setAllOrders(json.data);
+            localStorage.setItem("avexon_user_orders", JSON.stringify(json.data));
+          } else {
+            const stored = localStorage.getItem("avexon_user_orders");
+            if (stored) setAllOrders(JSON.parse(stored));
+          }
+        } catch (err) {
+          console.error("Failed to fetch server orders: ", err);
+          const stored = localStorage.getItem("avexon_user_orders");
+          if (stored) setAllOrders(JSON.parse(stored));
         }
-      } catch (err) {
-        console.error(err);
-      }
+      };
+      fetchOrders();
 
       if (noticeConfig) {
         setNoticeShow(noticeConfig.show);
@@ -909,6 +919,13 @@ export default function AdminPanel({ isOpen, onClose, isStandalonePWA = false }:
       localStorage.setItem("avexon_user_orders", JSON.stringify(updatedList));
       // Force trigger immediate storage update across listener windows
       window.dispatchEvent(new Event("storage"));
+      
+      // Save order update on server database
+      fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingOrder)
+      }).catch(err => console.error("Failed to sync updated order to server:", err));
     } catch (err) {
       console.warn(err);
     }
@@ -930,6 +947,11 @@ export default function AdminPanel({ isOpen, onClose, isStandalonePWA = false }:
           localStorage.removeItem("avexon_active_tracking_id");
         }
         window.dispatchEvent(new Event("storage"));
+        
+        // Delete order from server database
+        fetch(`/api/orders/${orderId}`, {
+          method: "DELETE"
+        }).catch(err => console.error("Failed to sync deleted order to server:", err));
       } catch (e) {}
       triggerSuccessAlert("অর্ডার ডাটাবেজ থেকে মুছে ফেলা হয়েছে।");
     }
@@ -2972,11 +2994,12 @@ export default function AdminPanel({ isOpen, onClose, isStandalonePWA = false }:
                             <label className="block text-slate-400 text-[11px] font-bold mb-1.5">পেমেন্ট মেথড</label>
                             <select
                               value={editingOrder.paymentMethod}
-                              onChange={(e) => setEditingOrder({...editingOrder, paymentMethod: e.target.value as 'bkash' | 'nagad'})}
+                              onChange={(e) => setEditingOrder({...editingOrder, paymentMethod: e.target.value})}
                               className="w-full bg-[#110724] border border-purple-500/10 text-slate-100 rounded-xl px-4 py-2 text-xs focus:outline-none"
                             >
                               <option value="bkash">Bkash (বিকাশ)</option>
                               <option value="nagad">Nagad (নগদ)</option>
+                              <option value="custom_pkg">Custom Package (কাস্টম প্যাকেজ)</option>
                             </select>
                           </div>
 

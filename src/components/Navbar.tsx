@@ -31,7 +31,8 @@ export default function Navbar({ activeSection, onNavigate, onOpenTracking }: Na
         if (stored) {
           const parsed = JSON.parse(stored);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setHasOrders(true);
+            const hasTrackable = parsed.some((o: any) => o.paymentMethod !== 'custom_pkg');
+            setHasOrders(hasTrackable);
             return;
           }
         }
