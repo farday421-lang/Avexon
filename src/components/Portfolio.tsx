@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "../context/ContentContext";
+import ScrollBlurReveal from "./ScrollBlurReveal";
 import { 
   FolderGit2, 
   ExternalLink, 
@@ -40,71 +41,75 @@ export default function Portfolio({ onOrderRequest }: PortfolioProps) {
       <div className="relative max-w-7xl mx-auto px-4 md:px-8 z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div className="space-y-4 max-w-2xl text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold uppercase tracking-wider">
-              <FolderGit2 className="w-4 h-4" />
-              <span>রিসেন্ট ওয়ার্কস</span>
-            </div>
-            
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-              আমাদের ডিজাইন ও{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-fuchsia-300 bg-clip-text text-transparent">
-                ডেভেলাপমেন্ট পোর্টফোলিও
-              </span>
-            </h2>
-            
-            <p className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed">
-              আমরা সেরা টেকনোলজি এবং বেস্ট প্র্যাক্টিস ব্যবহার করে যেসকল ক্লায়েন্ট প্রজেক্ট যথাসময়ে সম্পন্ন করেছি, তার কয়েকটি ঝলক নিচে তুলে ধরা হলো।
-            </p>
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold uppercase tracking-wider">
+            <FolderGit2 className="w-4 h-4" />
+            <span>রিসেন্ট ওয়ার্কস</span>
           </div>
+          
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            আমাদের ডিজাইন ও{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-fuchsia-300 bg-clip-text text-transparent">
+              ডেভেলাপমেন্ট পোর্টফোলিও
+            </span>
+          </h2>
+          
+          <ScrollBlurReveal 
+            text="আমরা সেরা টেকনোলজি এবং বেস্ট প্র্যাক্টিস ব্যবহার করে যেসকল ক্লায়েন্ট প্রজেক্ট যথাসময়ে সম্পন্ন করেছি, তার কয়েকটি ঝলক নিচে তুলে ধরা হলো।"
+            className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl"
+            as="p"
+            delay={0.12}
+            stagger={0.035}
+          />
 
           {/* Filter Navigation Buttons */}
-          <div className="flex flex-wrap items-center gap-2 bg-[#0d041c]/90 p-2 rounded-2xl border border-purple-950/40 shadow-inner max-w-full overflow-x-auto relative">
-            {categoryConfig.map((cat, idx) => {
-              const Icon = cat.icon;
-              const isActive = filter === cat.id;
-              const count = cat.id === "All"
-                ? portfolio.length
-                : portfolio.filter(item => item.category === cat.id).length;
+          <div className="pt-4 flex justify-center w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 bg-[#0d041c]/90 p-2 rounded-2xl border border-purple-950/40 shadow-inner max-w-full overflow-x-auto relative">
+              {categoryConfig.map((cat, idx) => {
+                const Icon = cat.icon;
+                const isActive = filter === cat.id;
+                const count = cat.id === "All"
+                  ? portfolio.length
+                  : portfolio.filter(item => item.category === cat.id).length;
 
-              return (
-                <button
-                  id={`portfolio-filter-btn-${idx}`}
-                  key={cat.id}
-                  onClick={() => setFilter(cat.id)}
-                  className={`relative px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all duration-300 cursor-pointer select-none outline-none group ${
-                    isActive ? "text-purple-200" : "text-slate-450 hover:text-slate-200"
-                  }`}
-                >
-                  {/* Sliding Background */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeCategoryBg"
-                      className="absolute inset-0 bg-gradient-to-r from-purple-500/15 via-fuchsia-500/10 to-pink-500/15 border border-purple-500/30 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(168,85,247,0.12)] z-0"
-                      transition={{ type: "spring", stiffness: 350, damping: 26 }}
-                    />
-                  )}
+                return (
+                  <button
+                    id={`portfolio-filter-btn-${idx}`}
+                    key={cat.id}
+                    onClick={() => setFilter(cat.id)}
+                    className={`relative px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all duration-300 cursor-pointer select-none outline-none group ${
+                      isActive ? "text-purple-200" : "text-slate-450 hover:text-slate-200"
+                    }`}
+                  >
+                    {/* Sliding Background */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeCategoryBg"
+                        className="absolute inset-0 bg-gradient-to-r from-purple-500/15 via-fuchsia-500/10 to-pink-500/15 border border-purple-500/30 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(168,85,247,0.12)] z-0"
+                        transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                      />
+                    )}
 
-                  {/* Icon with beautiful gradient touch */}
-                  <Icon className={`w-4 h-4 relative z-10 transition-transform duration-350 shrink-0 ${
-                    isActive ? "scale-110 text-purple-400" : "text-slate-600 group-hover:scale-105 group-hover:text-slate-400"
-                  }`} />
+                    {/* Icon with beautiful gradient touch */}
+                    <Icon className={`w-4 h-4 relative z-10 transition-transform duration-350 shrink-0 ${
+                      isActive ? "scale-110 text-purple-400" : "text-slate-600 group-hover:scale-105 group-hover:text-slate-400"
+                    }`} />
 
-                  {/* Category text key */}
-                  <span className="relative z-10 whitespace-nowrap">{cat.label}</span>
+                    {/* Category text key */}
+                    <span className="relative z-10 whitespace-nowrap">{cat.label}</span>
 
-                  {/* Count indicator dynamic tab */}
-                  <span className={`relative z-10 px-2 py-0.5 rounded-full text-[9px] font-sans font-black tracking-tight leading-none transition-all duration-300 shrink-0 ${
-                    isActive
-                      ? "bg-purple-500/25 text-purple-200 border border-purple-400/20"
-                      : "bg-[#070112] text-slate-600 border border-slate-900/40"
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+                    {/* Count indicator dynamic tab */}
+                    <span className={`relative z-10 px-2 py-0.5 rounded-full text-[9px] font-sans font-black tracking-tight leading-none transition-all duration-300 shrink-0 ${
+                      isActive
+                        ? "bg-purple-500/25 text-purple-200 border border-purple-400/20"
+                        : "bg-[#070112] text-slate-600 border border-slate-900/40"
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 

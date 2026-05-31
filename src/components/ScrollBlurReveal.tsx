@@ -54,12 +54,12 @@ export default function ScrollBlurReveal({
   };
 
   return (
-    <Component ref={containerRef} className={`${className} inline-block`}>
+    <Component ref={containerRef} className={`${className} block`}>
       <motion.span
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="inline-flex flex-wrap gap-1 md:gap-[1.5]"
+        className="inline-flex flex-wrap justify-center gap-x-1.5 gap-y-1 w-full"
       >
         {words.map((word, wordIdx) => (
           <motion.span
