@@ -1,0 +1,511 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+/* 
+  এখানে আপনি আপনার নিজের ফন্টের ফাইলটি আপলোড করতে পারেন। 
+  যেমন: public ফোল্ডারের ভেতর fonts নামের একটি ফোল্ডার খুলে সেখানে 
+  আপনার ফন্টটি "custom-logo.woff2" বা "custom-logo.ttf" নামে রাখতে পারেন।
+*/
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('/fonts/custom-logo.woff2') format('woff2'),
+       url('/fonts/custom-logo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Hind Siliguri", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-logo: "MyCustomFont", "Hind Siliguri", "Inter", sans-serif;
+}
+
+/* Custom Scrollbar Styles for elegant Dark experience */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(6, 13, 22, 0.4);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.25);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+/* Support native smooth scrolling */
+html, body {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  background-color: #010003;
+  color-scheme: dark;
+}
+
+/* Lock background scrolling when any modal or demo is active */
+body.modal-open {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+/* Hide navigation bar dynamically when facilities details/benefits modal is open */
+body.modal-open #main-navbar,
+body.modal-open #global-notice-bar {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-100%) !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hide floating navigation action trigger dynamically when any modal is open */
+body.modal-open #floating-navigation-system {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(40px) scale(0.9) !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Stunning glowing ring presets */
+.shadow-glow {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+/* Rotating Neon Loop Border for Service Cards */
+@keyframes neon-border-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.neon-card-border-container {
+  position: relative;
+  border-radius: 1rem; /* 16px to match rounded-2xl */
+  padding: 1.5px; /* Border thickness */
+  overflow: hidden;
+  background: rgba(168, 85, 247, 0.08); /* Fallback subtle dark purple bg */
+  transition: all 0.3s ease-in-out;
+}
+
+.neon-card-border-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 20%,
+    #a855f7 40%,
+    #f472b6 50%,
+    #3b82f6 60%,
+    transparent 80%
+  );
+  animation: neon-border-spin 6s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4; /* Subtle glow in resting state */
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.neon-card-border-container:hover::before {
+  opacity: 1; /* High prominence neon shine on mouse hover without changing speed to prevent blinking */
+}
+
+/* Brighter state when the core details are active and expanded */
+.neon-card-border-container.card-expanded::before {
+  opacity: 1;
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #c084fc 35%,
+    #f472b6 50%,
+    #60a5fa 65%,
+    transparent 85%
+  );
+}
+
+.neon-card-inner-content {
+  position: relative;
+  z-index: 1;
+  background: #0d041b; /* Rich solid dark background to mask interior perfectly and contrast neon */
+  border-radius: calc(1rem - 1.5px);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* Custom bold, glossy purple neon rotating outline loop for Why Choose Us cards */
+.why-choose-us-neon-card {
+  position: relative;
+  border-radius: 1.5rem; /* rounded-3xl */
+  padding: 3px; /* Bolder outline thickness for high visual quality */
+  overflow: hidden;
+  background: #0f0620;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-choose-us-neon-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280%;
+  height: 280%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #c084fc 35%,
+    #e879f9 50%,
+    #a855f7 65%,
+    transparent 85%
+  );
+  animation: neon-border-spin 4.5s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.why-choose-us-neon-inner {
+  position: relative;
+  z-index: 1;
+  background: #110624; /* Seamless dark inner masking */
+  border-radius: calc(1.5rem - 3px);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+}
+
+.why-choose-us-neon-card:hover {
+  box-shadow: 0 0 35px rgba(168, 85, 247, 0.65), 0 0 55px rgba(232, 121, 249, 0.4);
+}
+
+.why-choose-us-neon-card.no-glow-card {
+  box-shadow: none !important;
+}
+
+.why-choose-us-neon-card.no-glow-card:hover {
+  box-shadow: none !important;
+}
+
+/* Custom neon rotating outline loop for track button */
+.track-btn-neon {
+  position: relative;
+  border-radius: 9999px; /* fully rounded */
+  padding: 1.5px; /* fine border */
+  overflow: hidden;
+  background: rgba(168, 85, 247, 0.15);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  transition: all 0.3s ease;
+}
+
+.track-btn-neon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250%;
+  height: 250%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #a855f7 35%,
+    #d8b4fe 50%,
+    #8b5cf6 65%,
+    transparent 85%
+  );
+  animation: neon-border-spin 3s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.track-btn-neon:hover {
+  box-shadow: 0 0 18px rgba(139, 92, 246, 0.6);
+}
+
+/* Custom purple rotating outline neon loop for tracking card */
+.tracker-neon-card {
+  position: relative;
+  border-radius: 1.75rem; /* rounded-3xl */
+  padding: 2.5px; /* fine, premium outline */
+  overflow: hidden;
+  background: #090312;
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tracker-neon-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 10%,
+    #a855f7 30%,
+    #d8b4fe 50%,
+    #c084fc 70%,
+    transparent 90%
+  );
+  animation: neon-border-spin 4s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.tracker-neon-inner {
+  position: relative;
+  z-index: 1;
+  background: #090313; /* Dark space background */
+  border-radius: calc(1.75rem - 2.5px);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+}
+
+.tracker-neon-card:hover {
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.55), 0 0 60px rgba(216, 180, 254, 0.3);
+}
+
+/* Beautiful custom rotating outline neon loop animations for the countdown timer rectangle boxes */
+.timer-neon-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.8px;
+  background: #120524;
+  transition: all 0.3s ease;
+}
+
+/* Offer container card glowing rotating loop outline */
+.offer-neon-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.8px;
+  background: #0d041c;
+  border-radius: 1rem; /* rounded-2xl matches */
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+  transition: all 0.3s ease-in-out;
+}
+
+.offer-neon-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250%;
+  height: 250%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #c084fc 35%,
+    #f472b6 50%,
+    #a855f7 65%,
+    transparent 85%
+  );
+  animation: neon-border-spin 6s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.offer-neon-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: calc(1rem - 1.8px);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.timer-neon-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320%;
+  height: 320%;
+  transform: translate(-50%, -50%);
+  animation: neon-border-spin 3s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timer-neon-card-hour {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.45);
+}
+.timer-neon-card-hour::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #c084fc 35%,
+    #a855f7 50%,
+    #7c3aed 65%,
+    transparent 85%
+  );
+}
+.timer-neon-card-hour .timer-neon-inner {
+  box-shadow: inset 0 0 14px rgba(168, 85, 247, 0.85), inset 0 0 4px rgba(168, 85, 247, 0.5);
+}
+
+.timer-neon-card-min {
+  box-shadow: 0 0 20px rgba(217, 70, 249, 0.45);
+}
+.timer-neon-card-min::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #f472b6 35%,
+    #e879f9 50%,
+    #d946ef 65%,
+    transparent 85%
+  );
+}
+.timer-neon-card-min .timer-neon-inner {
+  box-shadow: inset 0 0 10px rgba(217, 70, 249, 0.65);
+}
+
+.timer-neon-card-sec {
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.5);
+}
+.timer-neon-card-sec::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    #fca5a5 35%,
+    #f43f5e 50%,
+    #e11d48 65%,
+    transparent 85%
+  );
+}
+.timer-neon-card-sec .timer-neon-inner {
+  box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.7);
+}
+
+.timer-neon-inner {
+  position: relative;
+  z-index: 1;
+  background: #16062f; /* Premium royal dark purple background to eliminate black */
+  border-radius: calc(0.75rem - 1.8px);
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Custom logo-specific neon rotating card with continuous full-circle rainbow glow and inset inner neon glow */
+.logo-neon-card {
+  position: relative;
+  overflow: hidden;
+  padding: 2px; /* Precision border thickness */
+  background: #120524;
+  border-radius: 0.75rem; /* rounded-xl */
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.35);
+  transition: all 0.3s ease;
+}
+
+.logo-neon-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320%;
+  height: 320%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    #a855f7 0%,
+    #ec4899 25%,
+    #3b82f6 50%,
+    #a855f7 75%,
+    #ec4899 100%
+  );
+  animation: neon-border-spin 3.5s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.logo-neon-inner {
+  position: relative;
+  z-index: 1;
+  background: #0E0616; /* Clean rich dark purple container matching the header background */
+  border-radius: calc(0.75rem - 2px);
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.8), inset 0 0 4px rgba(236, 72, 153, 0.45);
+  transition: all 0.3s ease;
+}
+
+/* Print CSS Media query to support elegant monochrome ink-safe invoice download/printing */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hide all interactive components except the dedicated printable invoice container */
+  body > *:not(#invoice-print-container) {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  
+  #invoice-print-container {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 30px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+/* 🌀 Infinite Auto-Sliding Marquee Keyframes & Utilities */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 42s linear infinite;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
+
+
+
