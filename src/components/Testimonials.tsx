@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "../context/ContentContext";
 import { Star, MessageSquareCode, Quote } from "lucide-react";
+import ScrollBlurReveal from "./ScrollBlurReveal";
 
 export default function Testimonials() {
   const { testimonials } = useContent();
@@ -34,9 +35,13 @@ export default function Testimonials() {
               </span>
             </h2>
             
-            <p className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed">
-              শুধুমাত্র আমাদের কথার ওপর বিশ্বাস করতে হবে না, দেখুন আমাদের প্রিমিয়াম কাস্টম ও রেডিমেড ওয়েবসাইট ক্রেতারা আমাদের সেবা সম্পর্কে কী ডাইরেক্ট মতামত প্রদান করেছেন।
-            </p>
+            <ScrollBlurReveal
+              text="শুধুমাত্র আমাদের কথার ওপর বিশ্বাস করতে হবে না, দেখুন আমাদের প্রিমিয়াম কাস্টম ও রেডিমেড ওয়েবসাইট ক্রেতারা আমাদের সেবা সম্পর্কে কী ডাইরেক্ট মতামত প্রদান করেছেন।"
+              className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed"
+              as="p"
+              delay={0.12}
+              stagger={0.035}
+            />
           </div>
 
           {/* Tab Selector Filtering */}

@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
+import ScrollBlurReveal from "./ScrollBlurReveal";
 import { 
   HelpCircle, 
   Clock, 
@@ -119,15 +120,13 @@ export default function WhyChooseUs() {
             বেছে নিবেন?
           </motion.h2>
           
-          <motion.p 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
+          <ScrollBlurReveal
+            text="আমরা স্রেফ কোনো সাধারণ টেমপ্লেট কাস্টমাইজেশন সার্ভিস নই। আপনার ব্যবসায়িক রূপান্তর এবং ইউজার এক্সপেরিয়েন্সকে নিখুঁত করতে আমরা সরবরাহ করি বেস্ট-ইন-ক্লাস ডিজিটাল প্রোডাক্টস।"
             className="text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed"
-          >
-            আমরা স্রেফ কোনো সাধারণ টেমপ্লেট কাস্টমাইজেশন সার্ভিস নই। আপনার ব্যবসায়িক রূপান্তর এবং ইউজার এক্সপেরিয়েন্সকে নিখুঁত করতে আমরা সরবরাহ করি বেস্ট-ইন-ক্লাস ডিজিটাল প্রোডাক্টস।
-          </motion.p>
+            as="p"
+            delay={0.15}
+            stagger={0.03}
+          />
         </div>
 
         {/* Highlighted Stats Block */}

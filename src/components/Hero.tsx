@@ -265,8 +265,8 @@ export default function Hero({ onNavigate }: HeroProps) {
             <div className="absolute top-1/3 left-1/4 w-40 h-40 bg-fuchsia-500/10 rounded-full blur-[80px] pointer-events-none" />
 
             {/* Orbiting dashed ring paths */}
-            <div className="absolute w-[340px] h-[340px] md:w-[380px] md:h-[380px] rounded-full border border-purple-500/10 pointer-events-none" />
-            <div className="absolute w-[260px] h-[260px] md:w-[300px] md:h-[300px] rounded-full border border-dashed border-fuchsia-500/15 pointer-events-none" />
+            <div className="absolute w-[340px] h-[340px] md:w-[380px] md:h-[380px] rounded-full border border-purple-500/10 animate-[spin_40s_linear_infinite] pointer-events-none" />
+            <div className="absolute w-[260px] h-[260px] md:w-[300px] md:h-[300px] rounded-full border border-dashed border-fuchsia-500/15 animate-[spin_25s_linear_infinite_reverse] pointer-events-none" />
 
             {/* Central Main Circle Shape (Purple bg as requested) */}
             <div className="relative w-[220px] h-[220px] md:w-[260px] md:h-[260px] flex-shrink-0 z-10 select-none">
@@ -284,9 +284,51 @@ export default function Hero({ onNavigate }: HeroProps) {
               >
                 {/* Glowing Outer Shadow & Intense Back Flare (Pulsing Ambient) */}
                 <div 
-                  className="absolute inset-x-[-25px] inset-y-[-25px] rounded-full bg-gradient-to-tr from-[#6b21a8]/40 via-[#4c1d95]/30 to-[#12003c]/60 blur-3xl pointer-events-none"
+                  className="absolute inset-x-[-25px] inset-y-[-25px] rounded-full bg-gradient-to-tr from-[#6b21a8]/40 via-[#4c1d95]/30 to-[#12003c]/60 blur-3xl pointer-events-none animate-pulse"
+                  style={{
+                    animationDuration: "5s"
+                  }}
                 />
                 <div className="absolute inset-[-10px] rounded-full bg-[#1e073c]/50 blur-2xl scale-110 pointer-events-none" />
+
+                {/* 1. Deep Rotating Glossy Neon Aura Glow (Pulsing Ambient Shadow) */}
+                <motion.div
+                  animate={{ 
+                    rotate: 360,
+                    scale: [1, 1.02, 0.98, 1]
+                  }}
+                  transition={{
+                    rotate: {
+                      duration: 4.5,
+                      repeat: Infinity,
+                      ease: "linear"
+                    },
+                    scale: {
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }}
+                  className="absolute inset-[-15px] rounded-full blur-2xl opacity-80 pointer-events-none z-10"
+                  style={{
+                    background: "conic-gradient(from 0deg, transparent 20%, rgba(147, 51, 234, 0.6) 45%, rgba(107, 33, 168, 0.85) 70%, rgba(88, 28, 135, 0.8) 90%, transparent 100%)",
+                  }}
+                />
+
+                {/* 2. Sharp Spinning Purple Neon Chasing Trail (Realistic glowing fiber optic border) */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="absolute inset-[-3.5px] rounded-full pointer-events-none z-10"
+                  style={{
+                    background: "conic-gradient(from 0deg, transparent 15%, rgba(88, 28, 135, 0.4) 40%, rgba(147, 51, 234, 1) 60%, rgba(107, 33, 168, 1) 80%, rgba(168, 85, 247, 0.95) 93%, rgba(107, 33, 168, 1) 98%, transparent 100%)",
+                    boxShadow: "0 0 35px 8px rgba(147, 51, 234, 0.65), inset 0 0 15px rgba(88, 28, 135, 0.8)"
+                  }}
+                />
 
                 {/* The main solid purple background circle with realistic lighting overlays */}
                 <div 

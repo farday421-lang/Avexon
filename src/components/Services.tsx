@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useContent } from "../context/ContentContext";
+import ScrollBlurReveal from "./ScrollBlurReveal";
 import { 
   Palette, 
   Globe, 
@@ -83,15 +84,13 @@ export default function Services({ onContactRequest }: ServicesProps) {
             </span>
           </motion.h2>
           
-          <motion.p 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.05 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
+          <ScrollBlurReveal 
+            text="প্রয়োজন অনুযায়ী সার্ভিস সিলেক্ট করে বিস্তারিত দেখতে পারেন। আমরা শতভাগ কোডিং কোয়ালিটি ও সিকিউরিটি নিশ্চিত প্রদান করি।"
             className="text-slate-400 text-xs sm:text-sm leading-relaxed"
-          >
-            প্রয়োজন অনুযায়ী সার্ভিস সিলেক্ট করে বিস্তারিত দেখতে পারেন। আমরা শতভাগ কোডিং কোয়ালিটি ও সিকিউরিটি নিশ্চিত প্রদান করি।
-          </motion.p>
+            as="p"
+            delay={0.15}
+            stagger={0.04}
+          />
         </div>
 
         {/* Compact Rectangle Services List with alternating side slide animation */}
