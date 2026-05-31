@@ -14,8 +14,10 @@ import Footer from "./components/Footer";
 import FloatingNav from "./components/FloatingNav";
 import CheckoutModal from "./components/CheckoutModal";
 import AdminPanel from "./components/AdminPanel";
+import DotToTextIntro from "./components/DotToTextIntro";
 
 export default function App() {
+  const [showIntro, setShowIntro] = useState(true);
   const [activeSection, setActiveSection] = useState("hero");
   const [selectedWebsiteName, setSelectedWebsiteName] = useState("");
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -92,6 +94,10 @@ export default function App() {
     setSelectedWebsiteName(websiteTitle);
     handleOpenCheckout(websiteTitle, type);
   };
+
+  if (showIntro) {
+    return <DotToTextIntro onComplete={() => setShowIntro(false)} />;
+  }
 
   // If launched as a standalone PWA application on home screen, render full screen directly
   if (isStandalone) {

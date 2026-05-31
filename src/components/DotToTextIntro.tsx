@@ -1,206 +1,233 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface DotToTextIntroProps {
   onComplete: () => void;
 }
 
+// Deterministic glossy scatter offsets for each letter forming "AVEXON • STUDIO"
+// This matches the video's scattered radial burst effect precisely
+const LETTERS_CONFIG = [
+  { char: "A", scatter: { x: -240, y: -130, rotate: -230, scale: 1.4 } },
+  { char: "V", scatter: { x: -180, y: 150, rotate: 190, scale: 0.95 } },
+  { char: "E", scatter: { x: -120, y: -190, rotate: -260, scale: 1.35 } },
+  { char: "X", scatter: { x: -50, y: 110, rotate: 220, scale: 1.1 } },
+  { char: "O", scatter: { x: -130, y: -50, rotate: -160, scale: 1.0 } },
+  { char: "N", scatter: { x: -80, y: 170, rotate: 340, scale: 1.5 } },
+  
+  // High-luminance brand dot spacer
+  { char: "•", scatter: { x: 0, y: -230, rotate: 180, scale: 2.2 }, isSpacer: true },
+
+  { char: "S", scatter: { x: 80, y: 160, rotate: -190, scale: 1.25 } },
+  { char: "T", scatter: { x: 130, y: -100, rotate: 280, scale: 1.0 } },
+  { char: "U", scatter: { x: 190, y: 120, rotate: -160, scale: 1.3 } },
+  { char: "D", scatter: { x: 250, y: -150, rotate: 390, scale: 1.1 } },
+  { char: "I", scatter: { x: 160, y: 70, rotate: -100, scale: 0.9 } },
+  { char: "O", scatter: { x: 220, y: -70, rotate: 250, scale: 1.4 } },
+];
+
+type IntroStage = "fall" | "scatter" | "settle" | "underline" | "fadeout";
+
 export default function DotToTextIntro({ onComplete }: DotToTextIntroProps) {
-  const [stage, setStage] = useState<"dot" | "expand" | "text" | "fadeout">("dot");
+  const [stage, setStage] = useState<IntroStage>("fall");
 
   useEffect(() => {
-    // Stage 1: Central Glowing Dot breathing (~1.0s)
-    const t1 = setTimeout(() => {
-      setStage("expand");
-    }, 1000);
+    // 1. Fall and Bouncing Ball sequence: 0ms to 1200ms
+    const tScatter = setTimeout(() => {
+      setStage("scatter");
+    }, 1200);
 
-    // Stage 2: Dot morphs/expands into a glowing horizontal core line (~0.8s)
-    const t2 = setTimeout(() => {
-      setStage("text");
-    }, 1800);
+    // 2. Letters scatter out and rotate dynamically: 1200ms to 2300ms
+    const tSettle = setTimeout(() => {
+      setStage("settle");
+    }, 2350);
 
-    // Stage 3: Letters beautifully emerge from the line and crystallize (~1.4s)
-    const t3 = setTimeout(() => {
+    // 3. Letters settle & snap perfectly into line: 2300ms to 3500ms
+    const tUnderline = setTimeout(() => {
+      setStage("underline");
+    }, 3550);
+
+    // 4. Glossy underline draws expansion & agency label fades in: 3500ms to 4500ms
+    const tFadeout = setTimeout(() => {
       setStage("fadeout");
-    }, 3200);
+    }, 4550);
 
-    // Stage 4: Entire screen transitions into active website
-    const t4 = setTimeout(() => {
+    // 5. Complete transition and reveal primary agency portals: 4500ms+
+    const tComplete = setTimeout(() => {
       onComplete();
-    }, 3700);
+    }, 5050);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
+      clearTimeout(tScatter);
+      clearTimeout(tSettle);
+      clearTimeout(tUnderline);
+      clearTimeout(tFadeout);
+      clearTimeout(tComplete);
     };
   }, [onComplete]);
 
-  // Letters array with spacing elements for "AVEXON STUDIO"
-  const word1 = "AVEXON".split("");
-  const word2 = "STUDIO".split("");
+  // Handle immediate skip/bypass
+  const handleSkip = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onComplete();
+  };
 
   return (
     <motion.div
       initial={{ opacity: 1 }}
       animate={{ opacity: stage === "fadeout" ? 0 : 1 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="fixed inset-0 bg-[#010003] z-[99999] flex flex-col items-center justify-center overflow-hidden select-none select-none pointer-events-auto"
+      transition={{ duration: 0.45, ease: "easeInOut" }}
+      className="fixed inset-0 bg-black z-[99999] flex flex-col items-center justify-center overflow-hidden select-none pointer-events-auto"
       style={{ willChange: "opacity" }}
     >
-      {/* Dynamic Background Aura */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(88,28,135,0.12)_0%,rgba(0,0,0,0)_65%)] pointer-events-none" />
+      {/* Background radial soft ambient violet glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.08)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
 
-      <div className="relative flex flex-col items-center justify-center">
-        
-        {/* Dynamic Glowing Dot / Core Line element */}
-        <motion.div
-          layout
-          initial={{ width: 14, height: 14, borderRadius: "50%" }}
-          animate={{
-            width: stage === "dot" ? 14 : stage === "expand" ? 180 : 0,
-            height: stage === "dot" ? 14 : stage === "expand" ? 2 : 0,
-            borderRadius: stage === "dot" ? "50%" : "2px",
-            scale: stage === "dot" ? [1, 1.25, 1] : 1,
-            opacity: stage === "text" ? 0 : 1,
-          }}
-          transition={{
-            width: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-            height: { duration: 0.5, ease: "easeInOut" },
-            scale: { repeat: stage === "dot" ? Infinity : 0, duration: 1.2, ease: "easeInOut" },
-            opacity: { duration: 0.4 }
-          }}
-          className="bg-gradient-to-r from-purple-500 via-fuchsia-400 to-indigo-500 absolute z-20 shadow-[0_0_20px_rgba(168,85,247,0.85)]"
-        />
+      {/* Skip Button - Elite architectural touch for smooth user bypass */}
+      <button
+        type="button"
+        onClick={handleSkip}
+        className="absolute top-6 right-6 px-4 py-1.5 rounded-full border border-purple-500/15 text-[9px] text-purple-400 font-mono tracking-[0.2em] bg-purple-950/10 hover:bg-purple-950/25 hover:border-purple-500/40 hover:text-white transition duration-200 cursor-pointer z-50 select-none uppercase shadow-[0_0_15px_rgba(147,51,234,0.05)]"
+      >
+        Skip Intro
+      </button>
 
-        {/* Ambient surrounding flare ring strictly inside dot stage */}
-        {stage === "dot" && (
+      <div className="relative flex flex-col items-center justify-center w-full max-w-lg min-h-[300px]">
+        {/* Dynamic Explosion Aura shockwave at moment of collision */}
+        <AnimatePresence>
+          {stage === "scatter" && (
+            <motion.div
+              initial={{ scale: 0.1, opacity: 0.95 }}
+              animate={{ scale: 3.8, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.75, ease: "easeOut" }}
+              className="absolute w-36 h-36 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.5)_0%,rgba(236,72,153,0.1)_50%,rgba(0,0,0,0)_70%)] blur-md pointer-events-none z-10"
+            />
+          )}
+        </AnimatePresence>
+
+        {/* 1. Bouncing Dot - Jelly Soft Squash and Stretch physics */}
+        {stage === "fall" && (
           <motion.div
-            initial={{ scale: 0.6, opacity: 0 }}
-            animate={{ scale: [0.8, 1.6, 0.8], opacity: [0.15, 0.45, 0.15] }}
-            transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-            className="absolute w-24 h-24 rounded-full border border-purple-500/25 blur-sm"
-          />
+            initial={{ y: -380, opacity: 1, scale: 1 }}
+            animate={{
+              y: [-380, 0, -120, 0, -40, 0],
+              scaleY: [1.35, 0.45, 1.25, 0.6, 1.05, 0.85],
+              scaleX: [0.65, 1.55, 0.75, 1.4, 0.95, 1.15],
+            }}
+            transition={{
+              duration: 1.2,
+              times: [0, 0.45, 0.65, 0.85, 0.94, 1.0],
+              ease: ["easeIn", "easeOut", "easeIn", "easeOut", "easeIn", "easeOut"]
+            }}
+            style={{ transformOrigin: "bottom" }}
+            className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-700 via-fuchsia-500 to-indigo-400 shadow-[0_0_35px_rgba(168,85,247,0.9),_0_0_15px_rgba(236,72,153,0.7)] relative flex items-center justify-center animate-pulse duration-1000"
+          >
+            {/* Specular spotlight glossy shine overlay */}
+            <div className="w-3 h-3 bg-white/75 rounded-full absolute top-2 left-3 blur-[0.4px]" />
+            <div className="w-1.5 h-1.5 bg-white/40 rounded-full absolute top-5 left-5 blur-[0.6px]" />
+          </motion.div>
         )}
 
-        {/* Text Area */}
-        <div className="flex flex-col items-center justify-center mt-2 h-16 relative">
-          
-          {stage === "text" && (
-            <motion.div 
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.05,
-                    delayChildren: 0.1
-                  }
-                }
-              }}
-              className="flex items-center gap-x-2 sm:gap-x-3"
-            >
-              {/* Word 1 - AVEXON */}
-              <div className="flex items-center">
-                {word1.map((char, index) => (
-                  <motion.span
-                    key={`word1-${index}`}
-                    variants={{
-                      hidden: { 
-                        opacity: 0, 
-                        y: 12, 
-                        filter: "blur(4px)",
-                        scale: 0.8 
-                      },
-                      visible: { 
-                        opacity: 1, 
-                        y: 0, 
-                        filter: "blur(0px)",
-                        scale: 1,
-                        transition: {
-                          type: "spring",
-                          stiffness: 140,
-                          damping: 12
-                        }
-                      }
-                    }}
-                    className="font-sans text-[26px] sm:text-[34px] font-extrabold tracking-[0.08em] bg-gradient-to-r from-white via-purple-100 to-purple-300 bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(168,85,247,0.15)] select-none"
-                    style={{ willChange: "transform, opacity, filter" }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </div>
+        {/* 2. Text layout core - coordinates determined relative to natural horizontal flow */}
+        {stage !== "fall" && (
+          <div className="flex flex-col items-center justify-center relative mt-4">
+            
+            {/* Letters horizontal line */}
+            <div className="flex items-center gap-x-1.5 sm:gap-x-2.5 px-6 relative py-4 mr-0.5 select-none">
+              
+              {LETTERS_CONFIG.map((item, idx) => {
+                const isSpacer = item.isSpacer;
+                
+                // Determine target parameters for relative coordinates & rot values
+                let animateProps = {};
+                let transitionProps = {};
 
-              {/* Spacing Particle dot separating the brand words */}
-              <motion.span
-                variants={{
-                  hidden: { opacity: 0, scale: 0 },
-                  visible: { 
-                    opacity: 1, 
+                if (stage === "scatter") {
+                  animateProps = {
+                    opacity: 1,
+                    x: item.scatter.x,
+                    y: item.scatter.y,
+                    rotate: item.scatter.rotate,
+                    scale: item.scatter.scale,
+                  };
+                  transitionProps = {
+                    type: "spring",
+                    stiffness: 110,
+                    damping: 12,
+                    mass: 0.8,
+                  };
+                } else if (stage === "settle" || stage === "underline" || stage === "fadeout") {
+                  animateProps = {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    rotate: 0,
                     scale: 1,
-                    transition: { delay: 0.5, type: "spring", stiffness: 200 }
-                  }
-                }}
-                className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 mx-1 shadow-[0_0_8px_rgba(236,72,153,0.8)] self-center mb-0.5 sm:mb-1"
-              />
+                  };
+                  transitionProps = {
+                    type: "spring",
+                    stiffness: 75,
+                    damping: 11,
+                    mass: 0.95,
+                    delay: idx * 0.045, // Exquisite organic staggered locking delay!
+                  };
+                }
 
-              {/* Word 2 - STUDIO */}
-              <div className="flex items-center">
-                {word2.map((char, index) => (
+                return (
                   <motion.span
-                    key={`word2-${index}`}
-                    variants={{
-                      hidden: { 
-                        opacity: 0, 
-                        y: 12, 
-                        filter: "blur(4px)",
-                        scale: 0.8
-                      },
-                      visible: { 
-                        opacity: 1, 
-                        y: 0, 
-                        filter: "blur(0px)",
-                        scale: 1,
-                        transition: {
-                          type: "spring",
-                          stiffness: 140,
-                          damping: 12
-                        }
+                    key={idx}
+                    animate={animateProps}
+                    transition={transitionProps}
+                    className={`
+                      select-none inline-block font-sans font-black tracking-[0.06em] leading-none select-none
+                      ${isSpacer 
+                        ? "text-[24px] sm:text-[34px] text-fuchsia-400 drop-shadow-[0_0_15px_rgba(236,72,153,0.9)] mx-1" 
+                        : "text-[26px] sm:text-[40px] bg-gradient-to-br from-white via-purple-300 to-purple-600 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(168,85,247,0.75)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]"
                       }
-                    }}
-                    className="font-sans text-[26px] sm:text-[34px] font-extrabold tracking-[0.08em] bg-gradient-to-r from-purple-200 via-fuchsia-300 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(236,72,153,0.15)] select-none"
-                    style={{ willChange: "transform, opacity, filter" }}
+                    `}
+                    style={{ willChange: "transform, opacity" }}
                   >
-                    {char}
+                    {item.char}
                   </motion.span>
-                ))}
-              </div>
+                );
+              })}
 
-            </motion.div>
-          )}
+              {/* 3. Glossy Purple Underline - drawing dynamically sideways */}
+              {["underline", "fadeout"].includes(stage) && (
+                <div className="absolute bottom-[-2px] left-1/2 -translate-x-1/2 w-[82%] sm:w-[86%] h-[3px] overflow-hidden flex items-center justify-center pointer-events-none">
+                  <motion.div
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: "100%", opacity: 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="h-full bg-gradient-to-r from-transparent via-purple-500 through-fuchsia-400 to-transparent shadow-[0_0_15px_rgba(168,85,247,1.0)] rounded-full"
+                  />
+                </div>
+              )}
 
-          {/* Subtext sliding down elegantly on finalize */}
-          {stage === "text" && (
-            <motion.span
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 0.6, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
-              className="text-[9px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-purple-400/90 text-center select-none absolute bottom-[-16px]"
-            >
-              Premium Web Agency
-            </motion.span>
-          )}
+            </div>
 
-        </div>
+            {/* 4. Secondary micro agency signature slogan sliding elegantly below line */}
+            <div className="h-6 relative flex items-center justify-center select-none mt-1">
+              {["underline", "fadeout"].includes(stage) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 0.65, y: 0 }}
+                  transition={{ delay: 0.45, duration: 0.6, ease: "easeOut" }}
+                  className="text-[9px] sm:text-[11px] font-mono tracking-[0.32em] uppercase bg-gradient-to-r from-purple-200 to-fuchsia-300 bg-clip-text text-transparent text-center select-none drop-shadow-[0_0_6px_rgba(168,85,247,0.3)]"
+                >
+                  PREMIUM WEB STUDIO
+                </motion.div>
+              )}
+            </div>
+
+          </div>
+        )}
       </div>
-      
-      {/* High-performance hardware acceleration support block */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-mono opacity-25 tracking-[0.1em] uppercase text-white/50">
-        AVX v1.0.0.8 • SECURE ENGINE
+
+      {/* Decorative technical specs subtle overlay */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-mono opacity-20 tracking-[0.16em] uppercase text-white/50 select-none">
+        AVEXON • INTUITIVE SECURE FRAMEWORK
       </div>
     </motion.div>
   );
