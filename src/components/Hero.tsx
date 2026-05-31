@@ -222,7 +222,7 @@ export default function Hero({ onNavigate }: HeroProps) {
               ))}
             </motion.div>
 
-            {/* Call to action element with rotating purple glossy border animations */}
+            {/* Call to action element */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -230,45 +230,23 @@ export default function Hero({ onNavigate }: HeroProps) {
               transition={{ type: "spring", stiffness: 35, damping: 13, delay: 0.55 }}
               className="flex flex-wrap items-center gap-4.5 pt-1 w-full"
             >
-              {/* Primary Button wrapper with rotating gradient border */}
-              <div className="relative p-[2px] overflow-hidden rounded-2xl md:w-auto w-full flex items-center justify-center group/btn shadow-lg shadow-purple-900/50 hover:shadow-purple-500/30 transition-all duration-300">
-                <span 
-                  className="absolute inset-[-1000%] animate-spin pointer-events-none" 
-                  style={{ 
-                    backgroundImage: "conic-gradient(from 90deg, #c084fc 0%, #3b0764 30%, #e9d5ff 50%, #3b0764 70%, #c084fc 100%)",
-                    animationDuration: "3s"
-                  }}
-                />
-                <button
-                  id="hero-primary-cta"
-                  onClick={() => onNavigate("websites")}
-                  className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-4 px-8 rounded-[14px] font-bold text-white bg-gradient-to-r from-purple-600 via-purple-700 to-fuchsia-700 hover:from-purple-500 hover:to-fuchsia-500 border-none overflow-hidden cursor-pointer transition-all duration-300 w-full text-[15px] tracking-wide z-10"
-                >
-                  {/* Glowing edge effect inside */}
-                  <span className="absolute inset-x-0 h-px bottom-0 bg-gradient-to-r from-transparent via-purple-300 to-transparent opacity-80" />
-                  <span>{hero.ctaText}</span>
-                  <ChevronRight className="w-5 h-5 text-purple-100 group-hover/btn:translate-x-1 transition-transform" />
-                </button>
-              </div>
+              <button
+                id="hero-primary-cta"
+                onClick={() => onNavigate("websites")}
+                className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-white bg-gradient-to-r from-purple-600 via-purple-700 to-fuchsia-700 hover:from-purple-500 hover:to-fuchsia-500 border border-purple-500/20 overflow-hidden cursor-pointer shadow-lg shadow-purple-900/40 hover:shadow-purple-500/20 transition-all duration-300 w-full md:w-auto text-[15px] tracking-wide"
+              >
+                <span>{hero.ctaText}</span>
+                <ChevronRight className="w-5 h-5 text-purple-100 group-hover:translate-x-1 transition-transform" />
+              </button>
 
-              {/* Secondary Button wrapper with rotating gradient border */}
-              <div className="relative p-[1.5px] overflow-hidden rounded-2xl md:w-auto w-full flex items-center justify-center group/secbtn shadow-md shadow-black/20">
-                <span 
-                  className="absolute inset-[-1000%] animate-spin pointer-events-none" 
-                  style={{ 
-                    backgroundImage: "conic-gradient(from 90deg, #a855f7 0%, #1e1b4b 25%, #e9d5ff 50%, #1e1b4b 75%, #a855f7 100%)",
-                    animationDuration: "4s"
-                  }}
-                />
-                <button
-                  id="hero-secondary-cta"
-                  onClick={() => onNavigate("services")}
-                  className="group relative inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-[14px] font-semibold text-slate-300 hover:text-white bg-[#0a0216]/95 hover:bg-[#110424]/95 border-none transition-all duration-300 w-full text-[15px] z-10"
-                >
-                  <span>এজেন্সি সার্ভিসেস</span>
-                  <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover/secbtn:text-purple-400 group-hover/secbtn:translate-x-0.5 group-hover/secbtn:-translate-y-0.5 transition-transform" />
-                </button>
-              </div>
+              <button
+                id="hero-secondary-cta"
+                onClick={() => onNavigate("services")}
+                className="group relative inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl font-semibold text-slate-300 hover:text-white bg-[#0a0216]/95 hover:bg-[#110424]/95 border border-purple-500/25 hover:border-purple-500/40 transition-all duration-300 w-full md:w-auto text-[15px]"
+              >
+                <span>এজেন্সি সার্ভিসেস</span>
+                <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </button>
             </motion.div>
 
           </div>
@@ -287,8 +265,8 @@ export default function Hero({ onNavigate }: HeroProps) {
             <div className="absolute top-1/3 left-1/4 w-40 h-40 bg-fuchsia-500/10 rounded-full blur-[80px] pointer-events-none" />
 
             {/* Orbiting dashed ring paths */}
-            <div className="absolute w-[340px] h-[340px] md:w-[380px] md:h-[380px] rounded-full border border-purple-500/10 animate-[spin_40s_linear_infinite] pointer-events-none" />
-            <div className="absolute w-[260px] h-[260px] md:w-[300px] md:h-[300px] rounded-full border border-dashed border-fuchsia-500/15 animate-[spin_25s_linear_infinite_reverse] pointer-events-none" />
+            <div className="absolute w-[340px] h-[340px] md:w-[380px] md:h-[380px] rounded-full border border-purple-500/10 pointer-events-none" />
+            <div className="absolute w-[260px] h-[260px] md:w-[300px] md:h-[300px] rounded-full border border-dashed border-fuchsia-500/15 pointer-events-none" />
 
             {/* Central Main Circle Shape (Purple bg as requested) */}
             <div className="relative w-[220px] h-[220px] md:w-[260px] md:h-[260px] flex-shrink-0 z-10 select-none">
@@ -306,51 +284,9 @@ export default function Hero({ onNavigate }: HeroProps) {
               >
                 {/* Glowing Outer Shadow & Intense Back Flare (Pulsing Ambient) */}
                 <div 
-                  className="absolute inset-x-[-25px] inset-y-[-25px] rounded-full bg-gradient-to-tr from-[#6b21a8]/40 via-[#4c1d95]/30 to-[#12003c]/60 blur-3xl pointer-events-none animate-pulse"
-                  style={{
-                    animationDuration: "5s"
-                  }}
+                  className="absolute inset-x-[-25px] inset-y-[-25px] rounded-full bg-gradient-to-tr from-[#6b21a8]/40 via-[#4c1d95]/30 to-[#12003c]/60 blur-3xl pointer-events-none"
                 />
                 <div className="absolute inset-[-10px] rounded-full bg-[#1e073c]/50 blur-2xl scale-110 pointer-events-none" />
-
-                {/* 1. Deep Rotating Glossy Neon Aura Glow (Pulsing Ambient Shadow) */}
-                <motion.div
-                  animate={{ 
-                    rotate: 360,
-                    scale: [1, 1.02, 0.98, 1]
-                  }}
-                  transition={{
-                    rotate: {
-                      duration: 4.5,
-                      repeat: Infinity,
-                      ease: "linear"
-                    },
-                    scale: {
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
-                  }}
-                  className="absolute inset-[-15px] rounded-full blur-2xl opacity-80 pointer-events-none z-10"
-                  style={{
-                    background: "conic-gradient(from 0deg, transparent 20%, rgba(147, 51, 234, 0.6) 45%, rgba(107, 33, 168, 0.85) 70%, rgba(88, 28, 135, 0.8) 90%, transparent 100%)",
-                  }}
-                />
-
-                {/* 2. Sharp Spinning Purple Neon Chasing Trail (Realistic glowing fiber optic border) */}
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="absolute inset-[-3.5px] rounded-full pointer-events-none z-10"
-                  style={{
-                    background: "conic-gradient(from 0deg, transparent 15%, rgba(88, 28, 135, 0.4) 40%, rgba(147, 51, 234, 1) 60%, rgba(107, 33, 168, 1) 80%, rgba(168, 85, 247, 0.95) 93%, rgba(107, 33, 168, 1) 98%, transparent 100%)",
-                    boxShadow: "0 0 35px 8px rgba(147, 51, 234, 0.65), inset 0 0 15px rgba(88, 28, 135, 0.8)"
-                  }}
-                />
 
                 {/* The main solid purple background circle with realistic lighting overlays */}
                 <div 
@@ -399,24 +335,6 @@ export default function Hero({ onNavigate }: HeroProps) {
                     className="absolute inset-0 z-15 pointer-events-none mix-blend-plus-lighter opacity-60"
                     style={{
                       background: "radial-gradient(circle at 80% 75%, rgba(244, 63, 94, 0.45) 0%, rgba(236, 72, 153, 0.1) 35%, transparent 60%)"
-                    }}
-                  />
-
-                  {/* Sweep highlight animation overlay (Realistic sheen moving across the entire avatar surface) */}
-                  <motion.div 
-                    animate={{
-                      x: ["-100%", "100%"],
-                    }}
-                    transition={{
-                      duration: 4.5,
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      ease: "easeInOut",
-                      repeatDelay: 2
-                    }}
-                    className="absolute inset-y-0 -left-1/4 w-[150%] z-15 pointer-events-none mix-blend-overlay opacity-40"
-                    style={{
-                      background: "linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.35) 48%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.35) 52%, transparent 65%)",
                     }}
                   />
 

@@ -104,14 +104,13 @@ body.modal-open #floating-navigation-system {
   height: 300%;
   transform: translate(-50%, -50%);
   background: conic-gradient(
-    from 0deg,
+    from 150deg,
     transparent 20%,
     #a855f7 40%,
     #f472b6 50%,
     #3b82f6 60%,
     transparent 80%
   );
-  animation: neon-border-spin 6s linear infinite;
   z-index: 0;
   pointer-events: none;
   opacity: 0.4; /* Subtle glow in resting state */
@@ -166,14 +165,13 @@ body.modal-open #floating-navigation-system {
   height: 280%;
   transform: translate(-50%, -50%);
   background: conic-gradient(
-    from 0deg,
+    from 150deg,
     transparent 15%,
     #c084fc 35%,
     #e879f9 50%,
     #a855f7 65%,
     transparent 85%
   );
-  animation: neon-border-spin 4.5s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -222,14 +220,13 @@ body.modal-open #floating-navigation-system {
   height: 250%;
   transform: translate(-50%, -50%);
   background: conic-gradient(
-    from 0deg,
+    from 150deg,
     transparent 15%,
     #a855f7 35%,
     #d8b4fe 50%,
     #8b5cf6 65%,
     transparent 85%
   );
-  animation: neon-border-spin 3s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -258,14 +255,13 @@ body.modal-open #floating-navigation-system {
   height: 300%;
   transform: translate(-50%, -50%);
   background: conic-gradient(
-    from 0deg,
+    from 150deg,
     transparent 10%,
     #a855f7 30%,
     #d8b4fe 50%,
     #c084fc 70%,
     transparent 90%
   );
-  animation: neon-border-spin 4s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -315,14 +311,13 @@ body.modal-open #floating-navigation-system {
   height: 250%;
   transform: translate(-50%, -50%);
   background: conic-gradient(
-    from 0deg,
+    from 150deg,
     transparent 15%,
     #c084fc 35%,
     #f472b6 50%,
     #a855f7 65%,
     transparent 85%
   );
-  animation: neon-border-spin 6s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -344,7 +339,6 @@ body.modal-open #floating-navigation-system {
   width: 320%;
   height: 320%;
   transform: translate(-50%, -50%);
-  animation: neon-border-spin 3s linear infinite;
   z-index: 0;
   pointer-events: none;
 }
@@ -430,14 +424,13 @@ body.modal-open #floating-navigation-system {
   height: 320%;
   transform: translate(-50%, -50%);
   background: conic-gradient(
-    from 0deg,
+    from 150deg,
     #a855f7 0%,
     #ec4899 25%,
     #3b82f6 50%,
     #a855f7 75%,
     #ec4899 100%
   );
-  animation: neon-border-spin 3.5s linear infinite;
   z-index: 0;
   pointer-events: none;
 }

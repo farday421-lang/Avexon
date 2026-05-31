@@ -243,7 +243,7 @@ export default function FloatingNav({ activeSection, onNavigate }: FloatingNavPr
                     transition={{ duration: 0.2 }}
                     className="flex items-center justify-center"
                   >
-                    <Compass className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300 animate-[spin_20s_linear_infinite]" />
+                    <Compass className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
                   </motion.div>
                 )}
               </AnimatePresence>
